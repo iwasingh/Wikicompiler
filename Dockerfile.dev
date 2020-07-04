@@ -1,0 +1,16 @@
+FROM python:latest
+
+RUN apt-get update && apt-get install -y \
+    python3-lxml
+
+WORKDIR /app
+
+RUN pip install pipenv
+
+COPY ./Pipfile .
+COPY ./Pipfile.lock .
+
+EXPOSE 8888
+
+CMD ["/bin/bash"]
+

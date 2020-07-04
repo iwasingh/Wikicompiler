@@ -1,0 +1,30 @@
+version: 1
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s[%(filename)s:%(lineno)d] - %(levelname)s - %(message)s'
+handlers:
+  root:
+    class: logging.FileHandler
+    filename: '../logs/default.log'
+    formatter: simple
+  lexer:
+    class: logging.FileHandler
+    filename: '../logs/lexer.log'
+    formatter: simple
+  parser:
+    class: logging.FileHandler
+    filename: '../logs/parser.log'
+    formatter: simple
+loggers:
+  lexer:
+    level: DEBUG
+    handlers: [file]
+    propagate: 0
+  parser:
+    level: DEBUG
+    handlers: [file]
+    propagate: 0
+
+root:
+  level: INFO
+  handlers: [root]

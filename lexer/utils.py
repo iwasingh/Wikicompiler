@@ -1,0 +1,100 @@
+import re
+import lexer.symbols as s
+
+""" Recursive match helper that regular expressions can't handle """
+
+
+class MalformedTag(Exception):
+    def __init__(self, start, end, position):
+        self.type = 'MalformedTag'
+        self.message = f"Malformed tag found: {start} {end} {position}"
+
+
+def recursive(text, start, end, position):
+    # match_start = re.compile(start, re.DOTALL)
+    # match_end = re.compile(end, re.DOTALL)
+    text_match = re.compile(r'.*?(?={0}|{1})'.format(start.regex, end.regex), re.DOTALL)
+    stack = []
+    index = position
+    content = ''
+    should_start = start.match(text, index)
+    last_end = None
+
+    if should_start:
+        while True:
+            is_start = start.match(text, index)
+            is_end = end.match(text, index)
+            txt = text_match.match(text, index)
+
+            if is_start:
+                stack.append(start)
+                index = is_start.end()
+
+            elif is_end:
+                stack.pop()
+                index = is_end.end()
+                last_end = is_end
+
+            elif txt:
+                content += txt.group(0)
+                index = txt.end()
+            else:
+                """
+                 A recursive tag should never ends up here.
+                 that means text has unbalanced tags or the loop reached end of file without finding a closing tag.
+                """
+                raise MalformedTag(start, end, position)
+
+            if not stack:
+                rec = RecursiveMatch(should_start.start(), index, [
+                    (should_start, start),
+                    (re.match(r'.*', content, re.DOTALL), content),
+                    (last_end, end)])
+
+                return rec
+    return None
+
+
+class RecursiveMatch:
+    # Can't subclass re.Match
+    def __init__(self, start, end, matches):
+        self._start = start
+        self._end = end
+        self._matches = matches
+
+    def end(self, pos=0):
+        return self._end
+
+    def start(self):
+        return self._start
+
+    @property
+    def matches(self):
+        return self._matches
+
+
+def clean(text, keep_tables=False):
+    tags = [
+        s.Bold,
+        s.ItalicAndBold,
+        s.Italic,
+    ]
+
+    for i in tags:
+        text = re.sub(i.start.regex, "", text)
+
+    if not keep_tables:
+        is_there = s.Table.start.re.search(text)
+        while is_there is not None:
+            try:
+                match = recursive(text, s.Table.start, s.Table.end, is_there.start())
+                text = text[:match.start()] + ' ' + text[match.end():]
+                is_there = s.Table.start.re.search(text)
+            except MalformedTag as e:
+                print(e.message)
+                break
+
+    text = re.sub(r'<ref[\s\S]*?\/\>(!?<\/ref\>)*|<ref[\s\S]*?\>*?[<]?\/ref\>', "", text)
+    # text = re.sub(r'\*', "", text)
+
+    return text
