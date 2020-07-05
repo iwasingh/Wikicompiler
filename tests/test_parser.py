@@ -33,16 +33,15 @@ def test_parse_list():
     text = """
 * asd
 ** asd
-*** asd
-* dsa
-* dasd
 """
     lexer = l.Lexer()
     print(lexer.tokenize(text))
     parser = p.Parser()
     ast = parser.parse(text)
-    print(ast)
-
+    print(ast, '\n', type(ast.children[1].children[0]))
+    assert isinstance(ast.children[0].value, p.LineBreakP) \
+           and isinstance(ast.children[1], p.ListNode) \
+           and isinstance(ast.children[1].children[0], p.Node)
 
 # def test_formatting():
 #     txt = """'''History'''

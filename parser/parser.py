@@ -260,4 +260,11 @@ class ListNode(Node):
         super().__init__(value)
 
     def compile(self, writer, parser):
-        pass
+        for node in self.children:
+            if isinstance(node, ListNode):
+                writer.write('\t'.expandtabs(1))
+                node.compile(writer, parser)
+            else:
+                writer.write('•')
+                node.value.render(writer)
+                writer.write('\n')

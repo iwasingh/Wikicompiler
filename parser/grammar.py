@@ -261,7 +261,7 @@ class Grammar:
     def list_item(parser):
         def extractor(r):
             _, arr, _ = r
-            return arr
+            return arr[0]
 
         result = pipe(parser,
                       seq(expect(List.start),
@@ -269,9 +269,9 @@ class Grammar:
                           expect(LineBreak.end, False)
                           ), extractor)
         if result:
-            node = p.Node(result)
+            # node = p.Node(result)
             # node.children = result
-            return node
+            return result
 
         return None
 
@@ -287,7 +287,7 @@ class Grammar:
         # if len(acc) and parser.current.token != stop:
         #     raise ParseError('Syntax error, no ending token found')
         if len(acc):
-            node = p.ListNode('')
+            node = p.ListNode('List')
             node.children = acc
             return node
 
