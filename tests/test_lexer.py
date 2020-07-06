@@ -6,7 +6,7 @@ import pytest
 
 
 def test_tokenize():
-    with open(TEST_DATA / 'wikitext') as f:
+    with open(TEST_DATA / 'wikitext_tokenize') as f:
         text = f.read()
         lexer = l.Lexer()
         tokens = lexer.tokenize(text)

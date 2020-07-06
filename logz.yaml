@@ -5,24 +5,24 @@ formatters:
 handlers:
   root:
     class: logging.FileHandler
-    filename: '../logs/default.log'
+    filename: 'default.log'
     formatter: simple
   lexer:
     class: logging.FileHandler
-    filename: '../logs/lexer.log'
+    filename: 'lexer.log'
     formatter: simple
   parser:
     class: logging.FileHandler
-    filename: '../logs/parser.log'
+    filename: 'parser.log'
     formatter: simple
 loggers:
   lexer:
     level: DEBUG
-    handlers: [file]
+    handlers: [lexer]
     propagate: 0
   parser:
     level: DEBUG
-    handlers: [file]
+    handlers: [parser]
     propagate: 0
 
 root:

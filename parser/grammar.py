@@ -124,7 +124,8 @@ class Grammar:
         result = pipe(parser,
                       seq(expect(Link.start),
                           Grammar.epsilon,
-                          rep(sor(Grammar.epsilon, Grammar.template, Grammar.link, Grammar.formatting), Link.end),
+                          rep(sor(Grammar.epsilon, Grammar.template, Grammar.link, Grammar.formatting,
+                                  Grammar.linebreak, at_least_one=True), Link.end),
                           expect(Link.end)),
                       extractor)
 
@@ -150,13 +151,11 @@ class Grammar:
 
         ---
         Internal EBNF
-        header6     = "======", text, "======";
-        header5     = "=====", text, "=====";
-        header4     = "====", text, "====";
-        header3     = "===", text, "===";
-        header2     = "==", text, "==";
-
-        NOTE: Linebreak is one of the ignored character in the lexer, i should consider them TODO
+        header6     = "======", text, "======", linebreak;
+        header5     = "=====", text, "=====", linebreak;
+        header4     = "====", text, "====", linebreak;
+        header3     = "===", text, "===", linebreak;
+        header2     = "==", text, "==", linebreak;
 
         """
         precedence = [
@@ -174,7 +173,7 @@ class Grammar:
         def heading(start, end):
             return seq(
                 expect(start),
-                rep(sor(Grammar.epsilon, Grammar.template, Grammar.link, Grammar.formatting), end),
+                rep(sor(Grammar.epsilon, Grammar.template, Grammar.link, Grammar.formatting, at_least_one=True), end),
                 expect(end),
                 # expect(LineBreak.start))
                 Grammar.linebreak)
@@ -182,11 +181,12 @@ class Grammar:
         try:
             result = pipe(parser, sor(*[heading(i.start, i.end) for i in precedence]), extractor)
         except ParseError as e:
-            raise e
+            return Grammar.epsilon(parser)
+            # return p.TextP()
 
         if result:
             nodes = result
-            node = p.HeadingNode(nodes[0])
+            node = p.HeadingNode('Heading')
             node.children = nodes
             return node
 
@@ -261,17 +261,19 @@ class Grammar:
     def list_item(parser):
         def extractor(r):
             _, arr, _ = r
-            return arr[0]
+            return arr
 
         result = pipe(parser,
                       seq(expect(List.start),
-                          rep(sor(Grammar.epsilon, Grammar.template, Grammar.link, Grammar.list), LineBreak.end),
+                          rep(sor(Grammar.template, Grammar.link, Grammar.headings, Grammar.list, Grammar.epsilon, at_least_one=True),
+                              LineBreak.end),
                           expect(LineBreak.end, False)
                           ), extractor)
         if result:
-            # node = p.Node(result)
-            # node.children = result
-            return result
+            # return result
+            node = p.Node(None)
+            node.children = result
+            return node
 
         return None
 

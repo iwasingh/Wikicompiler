@@ -43,6 +43,7 @@ class Node:
     def compile(self, writer, parser):
         parser.notify(self)
         if self.value:
+            # breakpoint()
             self.value.render(writer)
 
         for children in self.children:
@@ -72,6 +73,7 @@ class Parser:
         self._ast = Node()
         self._index = -1
         self._current = None
+        # self.last = None
         self._listeners = []
         self.lexer = lexer.Lexer()
         # self.expression =
@@ -85,6 +87,7 @@ class Parser:
             self.next()
             while self.current.token != lexer.Lexer.EOF:
                 result = expression(self)
+                # print(self.current, result)
                 if result:
                     self._ast.add(result)
                 else:
@@ -97,6 +100,7 @@ class Parser:
 
     def next(self):
         try:
+            # self.last_token = self._current
             token = next(self._tokens)
             # logging.info('Next token: ' + repr(token))
             self._index = self._index + 1
@@ -136,6 +140,9 @@ class Expression:
 
     def render(self, writer):
         raise NotImplementedError()
+
+    def compile(self, writer, parser):
+        return self.render(writer)
 
     # def value(self):
     #     return self.expression
@@ -186,7 +193,9 @@ class LinkP(Expression):
 
     def render(self, writer):
         title, args = self.evaluate()
-        writer.write(args[0] if len(args) == 1 else title)
+        link = args[0] if len(args) == 1 else title
+        writer.write(link)
+        return link
 
     def category(self):
         return self.category_match.search(self.text)
@@ -198,7 +207,7 @@ class TemplateP(Expression):
 
     def render(self, writer):
         # Ignore templates
-        pass
+        return ''
 
     # def value(self):
     #     return ''
@@ -211,7 +220,7 @@ class CommentP(Expression):
 
     def render(self, writer):
         # Ignore comments
-        pass
+        return ''
 
     # def value(self):
     #     return ''
@@ -222,7 +231,7 @@ class FormattingP(Expression):
         super().__init__(node)
 
     def render(self, writer):
-        pass
+        return ''
 
 
 class LinkNode(Node):
@@ -266,5 +275,9 @@ class ListNode(Node):
                 node.compile(writer, parser)
             else:
                 writer.write('•')
-                node.value.render(writer)
+                node.compile(writer, parser)
+                # written = node.value.render(writer)
+                # if len(written.strip()) == 0:
+                #     writer.truncate(len(writer.getvalue()) - 1)
+                # else:
                 writer.write('\n')

@@ -3,6 +3,7 @@ import parser.parser as p
 from enum import Enum
 from lexer.utils import clean
 
+
 # from .grammar import Grammar
 
 class ParseTypes(Enum):
@@ -26,6 +27,7 @@ class Compiler:
 
     def compile(self, text):
         ast = self.parser.parse(text)
+        # print(ast)
         return clean(self.render(ast))
 
     def on(self, fn, parse_type):

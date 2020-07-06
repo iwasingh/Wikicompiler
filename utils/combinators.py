@@ -27,7 +27,7 @@ def seq(*args):
     return parse
 
 
-def sor(*args):
+def sor(*args, at_least_one=False):
     """ sor aka or aka alternative; "or" keyword is reserved, that's why this name """
 
     def parse(parser):
@@ -36,6 +36,8 @@ def sor(*args):
             if result is not None:
                 return result
 
+        if at_least_one:
+            raise ParseError('Syntax error, sor rule failed')
         return None
 
     return parse
@@ -86,8 +88,6 @@ def rep(expression, stop):
                 acc.append(result)
         # parser.next()
         if len(acc) and parser.current.token != stop:
-            print(acc)
-            breakpoint()
             raise ParseError('Syntax error, no ending token found')
 
         return acc

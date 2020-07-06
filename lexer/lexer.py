@@ -50,7 +50,7 @@ class LexerToken(Token):
 
     def __str__(self):
         return self._token.__repr__() + f' [{self._col}]'
-        # return '\n' + self._text
+        # return '\n' + self._text + ' ' + str(self._col)
 
     def __eq__(self, token):
         return self._token == token
@@ -80,6 +80,12 @@ class Lexer:
         self._row = 0  # Not used yet
         self._col = 0
         self.encoder = encoder
+        self.tokens = list()
+        self.last_token = None
+
+        for index, s in enumerate(Lexer.table[Symbol.RESERVED]):
+            setattr(s, 'lexer', self)
+            Lexer.table[Symbol.RESERVED][index] = s
 
     def _tokenize(self, text, symbol_type):
         """
@@ -121,7 +127,8 @@ class Lexer:
         return tokens, Symbol.RESERVED if len(tokens) > 0 else Symbol.ID
 
     def tokenize(self, text):
-        tokens = list()
+        self.tokens = list()
+        self.last_token = None
         self._col = 0
         symbol_type = Symbol.RESERVED
 
@@ -134,14 +141,15 @@ class Lexer:
             else:
                 resolved_tokens, next_symbol = self._tokenize(text, symbol_type)
                 symbol_type = next_symbol
-                tokens = tokens + resolved_tokens
+                self.tokens = self.tokens + resolved_tokens
+                self.last_token = self.tokens[-1] if len(self.tokens) else None
                 if symbol_type is None:
                     break
 
-        tokens.append(EOFToken(self._row, self._col))
+        self.tokens.append(EOFToken(self._row, self._col))
         logger.info('EOF')
         self._col += 1
-        return tokens
+        return self.tokens
 
     @classmethod
     def symbol(cls, symbol_type):
@@ -190,8 +198,28 @@ Lexer.symbol(Symbol.RESERVED)(Heading)
 # Comment
 Lexer.symbol(Symbol.RESERVED)(Comment)
 
+
 # List
-Lexer.symbol(Symbol.RESERVED)(List)
+# Lexer.symbol(Symbol.RESERVED)(List)
+
+# @Lexer.symbol(Symbol.RESERVED)
+# class HeadingT(Heading):
+#     def match(self, text, pos, **kwargs):
+#         match, token = super().match(text, pos, **kwargs)
+#         if match and self.lexer.last_token is not None and self.lexer.last_token.token != LineBreak.start:
+#             return match, TextT.start
+#
+#         return match, token
+
+
+@Lexer.symbol(Symbol.RESERVED)
+class ListT(List):
+    def match(self, text, pos, **kwargs):
+        match, token = super().match(text, pos, **kwargs)
+        if match and self.lexer.last_token is not None and self.lexer.last_token.token != LineBreak.start:
+            return match, TextT.start
+
+        return match, token
 
 
 @Lexer.symbol(Symbol.RESERVED)
