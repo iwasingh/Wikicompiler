@@ -3,8 +3,10 @@ import parser.parser as p
 import compiler as c
 import lexer.lexer as l
 import pytest
-from parser.grammar import Grammar
-import time
+import traceback
+import logging
+
+logger = logging.getLogger('parser')
 
 
 def test_parse():
@@ -13,8 +15,9 @@ def test_parse():
         parser = p.Parser()
         try:
             ast = parser.parse(text)
-        except Exception:
-            pass
+            logger.info(ast)
+        except Exception as e:
+            traceback.print_exc()
 
 
 def test_headings():
@@ -40,10 +43,10 @@ def test_parse_list():
 ** asd
 """
     lexer = l.Lexer()
-    print(lexer.tokenize(text))
+    logger.info(lexer.tokenize(text))
     parser = p.Parser()
     ast = parser.parse(text)
-    print(ast, '\n', type(ast.children[1].children[0]))
+    logger.info(ast)
     assert isinstance(ast.children[0].value, p.LineBreakP) \
            and isinstance(ast.children[1], p.ListNode) \
            and isinstance(ast.children[1].children[0], p.Node)

@@ -265,7 +265,7 @@ class Grammar:
 
         result = pipe(parser,
                       seq(expect(List.start),
-                          rep(sor(Grammar.template, Grammar.link, Grammar.headings, Grammar.list, Grammar.epsilon, at_least_one=True),
+                          rep(sor(Grammar.epsilon, Grammar.template, Grammar.link, Grammar.headings, Grammar.list, at_least_one=True),
                               LineBreak.end),
                           expect(LineBreak.end, False)
                           ), extractor)

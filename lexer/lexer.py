@@ -147,6 +147,7 @@ class Lexer:
                     break
 
         self.tokens.append(EOFToken(self._row, self._col))
+        logger.info(self.tokens)
         logger.info('EOF')
         self._col += 1
         return self.tokens
