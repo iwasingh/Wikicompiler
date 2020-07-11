@@ -18,8 +18,12 @@
 
 Wikicompiler is a fully extensible library that helps you to compile [Wikitext](https://www.mediawiki.org/wiki/Wikitext). For example you can do text analysis, text extraction, document preprocessing and so on. In fact this library implements a recursive descent parser that parse and evaluate(you can custumize this process if you want) the wikicode. Check out the examples
 
+
+## Requirements
+* Python >= 3.6
+
 ## Basic Usage
-```
+```python
  from wikicompiler import compiler as c
  
  wcc = c.Compiler()
@@ -28,17 +32,17 @@ Wikicompiler is a fully extensible library that helps you to compile [Wikitext](
 ```
 You can listen specific events emitted by the compiler. Let's say you want to grab all the links from a page:
 
-```
+```python
  links = []
  wcc.on(lambda node: links.append(node), c.ParseTypes.LINK) 
 
 ```
-Done! Checkout the examples section for more infos [Link extraction](https://github.com/iwasingh/Wikicompiler/tree/master/examples)
+Done! Checkout the examples section for more infos [Examples](https://github.com/iwasingh/Wikicompiler/tree/master/examples)
 
 ### AST
 
 If you want the AST instead, you can do the following way
-```
+```python
  from wikicompiler import parser.parser as p
  
  text="==Hello World=="
@@ -64,6 +68,7 @@ You can pass your own grammar to the parse and evaluate the AST yourself. Furthe
  
  parser = Parser(grammar=MyGrammar.expression())
  parser.parse(text)
-
 ```
 
+## License
+[MIT](https://github.com/iwasingh/Wikicompiler/blob/master/LICENSE)
