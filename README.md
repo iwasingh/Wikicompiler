@@ -1,14 +1,18 @@
 <br />
- p align="center">
+<p align="center">
   <a href="https://github.com/iwasingh/Wikicompiler">
-    <img src="https://i.imgur.com/fcuaUFj.png" alt="Logo" width="425px">
+    <img src="https://i.imgur.com/fcuaUFj.png" alt="Logo" width="135px">
   </a>
 
-  <h3 align="center">Wikicompiler </h3>
+  <h3 align="center">Wikicompiler</h3>
 
   <p align="center">
-    Wikitext compiler
-<br />
+    The wikipedia compiler
+    <br />
+    <br />
+    <br />
+  </p>
+</p> 
 
 # Wikicompiler
 
