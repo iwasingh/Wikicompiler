@@ -13,7 +13,6 @@ def normalize_title(title):
 
 def parse_link(node):
     category = node.value.category()
-
     if category:
         categories.append(category.group())
     else:

@@ -270,14 +270,18 @@ class ListNode(Node):
 
     def compile(self, writer, parser):
         for node in self.children:
-            if isinstance(node, ListNode):
+            # if isinstance(node.value, ListNode):
+            #     writer.write('\t'.expandtabs(1))
+            #     node.compile(writer, parser)
+            # else:
+            if isinstance(node.children[0], ListNode):
                 writer.write('\t'.expandtabs(1))
                 node.compile(writer, parser)
             else:
                 writer.write('•')
                 node.compile(writer, parser)
+                writer.write('\n')
                 # written = node.value.render(writer)
                 # if len(written.strip()) == 0:
                 #     writer.truncate(len(writer.getvalue()) - 1)
                 # else:
-                writer.write('\n')

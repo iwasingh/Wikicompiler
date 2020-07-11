@@ -1,17 +1,16 @@
 from config import TEST_DATA
-import parser.parser as p
 import compiler as c
 import traceback
 
 
 def extract_text():
     with (TEST_DATA / 'wikitext_anarchism').open(encoding="utf8") as f:
-        parser = p.Parser()
         w_compiler = c.Compiler()
         text = f.read()
         try:
 
             # ast = parser.parse(text)
+            # print(lexer.tokenize(text))
             text = w_compiler.compile(text)
             print(text)
             # print(ast)

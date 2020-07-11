@@ -64,15 +64,21 @@ class EOFToken(LexerToken):
         super().__init__(Lexer.EOF, row, col)
 
 
+"""
+Default global table
+
+"""
+GLOBAL_TABLE = {
+    Symbol.RESERVED: [],
+    Symbol.ID: [],
+    Symbol.IGNORE: []
+}
+
+
 class Lexer:
     """
     Lexer that handles streams of character and delivers tokens
     """
-    table = {
-        Symbol.RESERVED: [],
-        Symbol.ID: [],
-        Symbol.IGNORE: []
-    }
 
     EOF = Token('EOF')
 
@@ -82,10 +88,27 @@ class Lexer:
         self.encoder = encoder
         self.tokens = list()
         self.last_token = None
+        self.table = {
+            Symbol.RESERVED: [],
+            Symbol.IGNORE: [],
+            Symbol.ID: []
+        }
+        self.__create_table()
 
-        for index, s in enumerate(Lexer.table[Symbol.RESERVED]):
-            setattr(s, 'lexer', self)
-            Lexer.table[Symbol.RESERVED][index] = s
+        # for index, s in enumerate(self.table[Symbol.RESERVED]):
+        #     setattr(s, 'lexer', self)
+        #     self.table[Symbol.RESERVED][index] = s
+
+        # for s in self.table[Symbol.RESERVED]:
+        #     # s.lexer = property(lambda _: self)
+        #     setattr(s, 'lexer', self)
+
+    def __create_table(self):
+        for k, v in GLOBAL_TABLE.items():
+            for symbol in v:
+                inst = symbol()
+                setattr(inst, 'lexer', self)
+                self.table[k].append(inst)
 
     def _tokenize(self, text, symbol_type):
         """
@@ -152,16 +175,13 @@ class Lexer:
         self._col += 1
         return self.tokens
 
-    @classmethod
-    def symbol(cls, symbol_type):
-        def __wrap(symbol):
-            if symbol_type in cls.table:
-                cls.table[symbol_type].append(symbol())
-            else:
-                raise SymbolNotFoundError('Symbol definition missing')
-            return symbol
-
-        return __wrap
+    # def __new__(cls, *args, **kwargs):
+    #     instance = super().__new__(cls, *args, **kwargs)
+    #     print(instance)
+    #     for s in Lexer.table[Symbol.RESERVED]:
+    #         s.lexer = property(lambda self: instance)
+    #
+    #     return instance
 
 
 class SymbolNotFoundError(Exception):
@@ -169,10 +189,26 @@ class SymbolNotFoundError(Exception):
         super().__init__(message)
 
 
+def definition(symbol_type):
+    def __wrap(symbol):
+        if symbol_type in GLOBAL_TABLE:
+            GLOBAL_TABLE[symbol_type].append(symbol)
+        else:
+            raise SymbolNotFoundError('Symbol category missing')
+        return symbol
+        # class Wrapper(symbol):
+        #     def __init__(self):
+        #         super().__init__()
+        #
+        # return Wrapper
+
+    return __wrap
+
+
 """ Lexer symbol definitions """
 
 
-@Lexer.symbol(Symbol.RESERVED)
+@definition(Symbol.RESERVED)
 class TemplateT(Template):
     def __init__(self):
         super().__init__()
@@ -182,7 +218,7 @@ class TemplateT(Template):
 
 
 # Lexer.symbol(Symbol.RESERVED)(Link)
-@Lexer.symbol(Symbol.RESERVED)
+@definition(Symbol.RESERVED)
 class LinkT(Link):
 
     def __init__(self):
@@ -190,14 +226,14 @@ class LinkT(Link):
 
 
 # Headings
-Lexer.symbol(Symbol.RESERVED)(Heading6)
-Lexer.symbol(Symbol.RESERVED)(Heading5)
-Lexer.symbol(Symbol.RESERVED)(Heading4)
-Lexer.symbol(Symbol.RESERVED)(Heading3)
-Lexer.symbol(Symbol.RESERVED)(Heading)
+definition(Symbol.RESERVED)(Heading6)
+definition(Symbol.RESERVED)(Heading5)
+definition(Symbol.RESERVED)(Heading4)
+definition(Symbol.RESERVED)(Heading3)
+definition(Symbol.RESERVED)(Heading)
 
 # Comment
-Lexer.symbol(Symbol.RESERVED)(Comment)
+definition(Symbol.RESERVED)(Comment)
 
 
 # List
@@ -212,18 +248,24 @@ Lexer.symbol(Symbol.RESERVED)(Comment)
 #
 #         return match, token
 
+# class Lex(type):
+#     def __new__(cls, *args, **kwargs):
+#         cls.lexer =
 
-@Lexer.symbol(Symbol.RESERVED)
+
+@definition(Symbol.RESERVED)
 class ListT(List):
     def match(self, text, pos, **kwargs):
         match, token = super().match(text, pos, **kwargs)
-        if match and self.lexer.last_token is not None and self.lexer.last_token.token != LineBreak.start:
+        if match and self.lexer.last_token \
+                is not None and self.lexer.last_token.token != LineBreak.start \
+                and self.lexer.last_token.token != self.start:
             return match, TextT.start
 
         return match, token
 
 
-@Lexer.symbol(Symbol.RESERVED)
+@definition(Symbol.RESERVED)
 class RedirectT(Redirect):
     def match(self, text, pos, **kwargs):
         if self.start.match(text, pos, **kwargs):
@@ -236,10 +278,10 @@ class RedirectT(Redirect):
 # Lexer.symbol(Symbol.RESERVED)(Bold)
 # Lexer.symbol(Symbol.RESERVED)(Italic)
 
-Lexer.symbol(Symbol.RESERVED)(LineBreak)
+definition(Symbol.RESERVED)(LineBreak)
 
 
-@Lexer.symbol(Symbol.IGNORE)
+@definition(Symbol.IGNORE)
 class IgnoreTags:
     # start = Token('MATH_JAX_START', r'<math')
     # end = Token('MATH_JAX_END', r'')
@@ -252,7 +294,7 @@ class IgnoreTags:
         return self.regex.match(text, pos, **kwargs)
 
 
-@Lexer.symbol(Symbol.ID)
+@definition(Symbol.ID)
 class TextT(Text):
     # TODO Copy here the logic in the base class
     # tags = [symbol.start.regex + '|' + symbol.end.regex for symbol in Lexer.table[Symbol.RESERVED]]
