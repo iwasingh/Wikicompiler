@@ -96,6 +96,10 @@ class MyLexCustomTag(MyCustomTag):
  def match(self, text, pos, **kwargs):
    # Do something
    # Must return (Match, Token)
-``` 
+```
+
+## Notes
+Wikitext cannot be solved by a context-free parser (the one implementend in this library) because Wikitext is based upon a context-sensitive grammar.
+But for most of the use cases, grammar rules can be simplified with a little information loss. For example, Templates are ignored by default in the evaluation, but its node is considerated anyway, that means you can parse the template (text inside of it) in your own manner when you reach that node. If you really need a result similar to the wikipedia actual page rendered in the browser, you should checkout [mediawiki specification](https://www.mediawiki.org/wiki/Markup_spec) or use their api directly that gives you the page properly rendered.
 ## License
 [MIT](https://github.com/iwasingh/Wikicompiler/blob/master/LICENSE)
