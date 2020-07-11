@@ -9,11 +9,8 @@ def extract_text():
         text = f.read()
         try:
 
-            # ast = parser.parse(text)
-            # print(lexer.tokenize(text))
             text = w_compiler.compile(text)
             print(text)
-            # print(ast)
         except Exception as e:
             traceback.print_exc()
 
