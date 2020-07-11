@@ -69,6 +69,31 @@ You can pass your own grammar to the parse and evaluate the AST yourself. Furthe
  parser = Parser(grammar=MyGrammar.expression())
  parser.parse(text)
 ```
+### Lexer
+You should checkout the symbols definitions(https://github.com/iwasingh/Wikicompiler/blob/master/lexer/symbols.py) and the [lexer symbols definition](https://github.com/iwasingh/Wikicompiler/blob/master/lexer/lexer.py#L208). WCC adds some basic symbols, you can extend the symbol table, obviously you have to change grammar too.
+Basically you first have to define a symbol (tag)
+```python
+from wikicompiler import lexer.lexer as l
+from wikicompiler import lexer.symbols as s
+class MyCustomTag(s.Tag):
+    start = s.Token('LINK_START', r'\[\[')
+    end = s.Token('LINK_END', r']]')
 
+    def __init__(self):
+        super().__init__(MyCustomTag.start, MyCustomTag.end)
+
+# And then define the symbol in the table
+
+@l.definition(l.Symbol.RESERVED)(MyCustomTag)
+
+# Or if you need to do other things when matching the token
+@l.definition(l.Symbol.RESERVED)
+class MyLexCustomTag(MyCustomTag):
+ def __init__(self):
+   super().__init__()
+ def match(self, text, pos, **kwargs):
+   # Do something
+   # Must return (Match, Token)
+``` 
 ## License
 [MIT](https://github.com/iwasingh/Wikicompiler/blob/master/LICENSE)
