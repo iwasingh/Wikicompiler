@@ -51,10 +51,10 @@ If you want the AST instead, you can do the following way
  ast = parser.parse(text)
 
 ```
-Then you can visit that AST and consider to writer your own evaluator yourself.
+Then you can visit that AST and consider to write your own evaluator yourself.
 
 ### Grammar
-You can pass your own grammar to the parse and evaluate the AST yourself. Furthermore you can you the combinators to write your own rules checkout the [Grammar](https://github.com/iwasingh/Wikicompiler/blob/master/parser/grammar.py) and the [combinators](https://github.com/iwasingh/Wikicompiler/blob/master/utils/combinators.py)
+You can pass your own grammar to the parse and evaluate the AST yourself. Furthermore you can use combinators to write your own rules checkout the [Grammar](https://github.com/iwasingh/Wikicompiler/blob/master/parser/grammar.py) and the [combinators](https://github.com/iwasingh/Wikicompiler/blob/master/utils/combinators.py)
 
 ```python
 
