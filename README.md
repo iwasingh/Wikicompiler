@@ -13,7 +13,7 @@
     <br />
   </p>
   <p align="center">
-   <img src="./assets/images/wcc_evaluation.png" alt="Evaluation" width="500px">
+   <img src="./assets/images/wcc_evaluation.png" alt="Evaluation" width="1000px">
   </p>
 </p> 
 
