@@ -100,6 +100,15 @@ class MyLexCustomTag(MyCustomTag):
    # Do something
    # Must return (Match, Token)
 ```
+## Examples
+Under (tests)[/tests] you can found some examples that are used to test everything out.
+If you need to look how the outputs are you can found some examples under (examples)[/examples] directory in which you will found
+ * (data)[./examples/data] input data for the scripts
+ * (outputs)[./examples/outputs] the parsed data
+
+ in particular i made 2 examples
+ * Meta data extraction(links and categories): (input)[./examples/data/wikitext_link_extraction.txt] | (output)[/examples/output/wikitext_link_extraction.txt] | (code)[/examples/link_extraction.py]
+ * Text extraction: (input)[/examples/data/wikitext_anarchism.txt] | (output)[/examples/outputs/wikitext_anarchism.txt] | (code)[/examples/text_extraction.py]
 
 ## Notes
 Wikitext cannot be solved by a context-free parser (the one implementend in this library) because Wikitext is based upon a context-sensitive grammar.
