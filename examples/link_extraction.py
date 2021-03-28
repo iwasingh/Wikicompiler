@@ -1,4 +1,4 @@
-from config import TEST_DATA
+from config import ROOT
 import compiler as c
 import traceback
 
@@ -6,6 +6,7 @@ categories = []
 links = []
 reverse_graph = []
 
+outputsDir = ROOT / 'examples/outputs'
 
 def normalize_title(title):
     return title.split('|')[0].lower().replace(" ", "_")
@@ -22,13 +23,14 @@ def parse_link(node):
 
 
 def extract_links():
-    with (TEST_DATA / 'wikitext_link_extraction').open(encoding="utf8") as f:
+    outputFile = (outputsDir / 'wikitext_link_extraction.txt').open(encoding="utf8", mode="w")
+    with (ROOT / 'examples/data/wikitext_link_extraction.txt').open(encoding="utf8") as f:
         w_compiler = c.Compiler()
         listener = w_compiler.on(lambda node: parse_link(node), c.ParseTypes.LINK)
         text = f.read()
         try:
             w_compiler.compile(text)
-            print('\n\n* Links\n\n', reverse_graph, '\n\n* Categories\n', categories)
+            outputFile.write(f'\n\n* Links\n\n {reverse_graph} \n\n* Categories\n {categories}'),
         except Exception as e:
             traceback.print_exc()
         finally:

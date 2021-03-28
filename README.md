@@ -12,6 +12,9 @@
     <br />
     <br />
   </p>
+  <p align="center">
+   <img src="./assets/images/wcc_evaluation.png" alt="Evaluation" width="135px">
+  </p>
 </p> 
 
 # Wikicompiler
