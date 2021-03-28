@@ -108,7 +108,7 @@ If you need to look how the outputs are you can found some examples under [examp
 
  in particular i made 2 examples
 
- * Meta data extraction(links and categories): [input](https://github.com/iwasingh/Wikicompiler/tree/master/examples/data/wikitext_link_extraction.txt) | [output](https://github.com/iwasingh/Wikicompiler/tree/master/examples/output/wikitext_link_extraction.txt) | [code](https://github.com/iwasingh/Wikicompiler/tree/master/examples/link_extraction.py)
+ * Meta data extraction(links and categories): [input](https://github.com/iwasingh/Wikicompiler/tree/master/examples/data/wikitext_link_extraction.txt) | [output](https://github.com/iwasingh/Wikicompiler/tree/master/examples/outputs/wikitext_link_extraction.txt) | [code](https://github.com/iwasingh/Wikicompiler/tree/master/examples/link_extraction.py)
  * Text extraction: [input](https://github.com/iwasingh/Wikicompiler/tree/master/examples/datawikitext_anarchism.txt) | [output](https://github.com/iwasingh/Wikicompiler/tree/master/examples/outputs/wikitext_anarchism.txt) | [code](https://github.com/iwasingh/Wikicompiler/tree/master/examples/text_extraction.py)
 
 ## Notes
