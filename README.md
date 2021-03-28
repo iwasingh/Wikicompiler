@@ -101,14 +101,15 @@ class MyLexCustomTag(MyCustomTag):
    # Must return (Match, Token)
 ```
 ## Examples
-Under (tests)[/tests] you can found some examples that are used to test everything out.
-If you need to look how the outputs are you can found some examples under (examples)[/examples] directory in which you will found
- * (data)[./examples/data] input data for the scripts
- * (outputs)[./examples/outputs] the parsed data
+Under (tests)[https://github.com/iwasingh/Wikicompiler/tree/master/tests] you can found some examples that are used to test everything out.
+If you need to look how the outputs are you can found some examples under (examples)[https://github.com/iwasingh/Wikicompiler/tree/master/examples] directory in which you will found
+ * (data)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/data] input data for the scripts
+ * (outputs)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/outputs] the parsed data
 
  in particular i made 2 examples
- * Meta data extraction(links and categories): (input)[./examples/data/wikitext_link_extraction.txt] | (output)[/examples/output/wikitext_link_extraction.txt] | (code)[/examples/link_extraction.py]
- * Text extraction: (input)[/examples/data/wikitext_anarchism.txt] | (output)[/examples/outputs/wikitext_anarchism.txt] | (code)[/examples/text_extraction.py]
+
+ * Meta data extraction(links and categories): (input)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/data/wikitext_link_extraction.txt] | (output)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/output/wikitext_link_extraction.txt] | (code)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/link_extraction.py]
+ * Text extraction: (input)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/datawikitext_anarchism.txt] | (output)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/outputs/wikitext_anarchism.txt] | (code)[https://github.com/iwasingh/Wikicompiler/tree/master/examples/text_extraction.py]
 
 ## Notes
 Wikitext cannot be solved by a context-free parser (the one implementend in this library) because Wikitext is based upon a context-sensitive grammar.
